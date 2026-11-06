@@ -1,137 +1,59 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kannada word of the day</title>
+<title>Kannada daily post planner</title>
 <style>
-:root{--bg:#fff;--fg:#1f1f1d;--mu:#6b6a65;--ln:#d9d7cf;--bt:#f1efe8;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg:#fff;--fg:#1f1f1d;--mu:#6b6a65;--ln:#d9d7cf;--bt:#f1efe8;color-scheme:light;box-sizing:border-box}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1f1f1d;--fg:#f1efe8;--mu:#b4b2a9;--ln:#444441;--bt:#2c2c2a;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#1f1f1d;--fg:#f1efe8;--mu:#b4b2a9;--ln:#444441;--bt:#2c2c2a;color-scheme:dark}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:460px;margin:0 auto;padding:16px}
-h1{font-size:20px;font-weight:500;margin:0 0 4px}
-.mu{color:var(--mu);font-size:14px;margin:0 0 12px}
-img{display:block;width:100%;max-width:340px;margin:0 auto 12px;border-radius:16px}
-.row{display:flex;gap:8px;margin:0 0 12px}
-button,input{font:inherit;color:var(--fg);background:var(--bt);border:1px solid var(--ln);border-radius:8px;padding:10px 12px}
-button{flex:1}
+main{max-width:460px;margin:0 auto;padding:16px}h1{font-size:20px;font-weight:600;margin:0 0 4px}.mu{color:var(--mu);font-size:14px;margin:0 0 12px}
+img{display:block;width:100%;max-width:340px;margin:0 auto 12px;border-radius:16px}.row{display:flex;gap:8px;margin:0 0 12px}
+button,input{font:inherit;color:var(--fg);background:var(--bt);border:1px solid var(--ln);border-radius:8px;padding:10px 12px}button{flex:1;cursor:pointer}
 pre{white-space:pre-wrap;background:var(--bt);border:1px solid var(--ln);border-radius:8px;padding:12px;font:15px/1.5 system-ui,sans-serif;margin:0 0 8px}
-label{display:block;font-size:14px;color:var(--mu);margin:16px 0 4px}
-.pri{background:#0F6E56;color:#fff;border-color:#0F6E56}
-#grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px}
-.g{aspect-ratio:1;border:1px solid var(--ln);border-radius:4px;font-size:11px;display:flex;align-items:center;justify-content:center;background:var(--bt);color:var(--mu);cursor:pointer}
-.g.p{background:#0F6E56;color:#fff;border-color:#0F6E56}
-.g.c{outline:2px solid var(--fg)}
-.on{background:var(--fg);color:var(--bg)}
-.g.h{background:#9FE1CB;color:#04342C;border-color:#9FE1CB}
+label{display:block;font-size:14px;color:var(--mu);margin:16px 0 4px}.pri{background:#0F6E56;color:#fff;border-color:#0F6E56}
+#nextPanel{padding:12px;border:1px solid var(--ln);border-radius:10px;margin:12px 0;background:var(--bt)}#nextTitle{font-weight:600}#grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.g{aspect-ratio:1;border:1px solid var(--ln);border-radius:5px;font-size:11px;display:flex;align-items:center;justify-content:center;background:var(--bt);color:var(--mu);cursor:pointer}.g.p{background:#0F6E56;color:#fff;border-color:#0F6E56}.g.h{background:#9FE1CB;color:#04342C;border-color:#9FE1CB}.g.c{outline:2px solid var(--fg)}.on{background:var(--fg);color:var(--bg)}
 </style></head><body><main>
 <h1>Kannada daily post</h1>
-<p class="mu" id="info"></p>
-<label for="startDate">Posting start date</label>
-<input id="startDate" type="date">
+<p class="mu" id="info">Loading your word list…</p>
+<label for="startDate">Posting start date (Day 1)</label><input id="startDate" type="date">
 <p class="mu" id="dateInfo"></p>
+<section id="nextPanel"><div id="nextTitle">Next post</div><div id="nextDetail" class="mu"></div><button id="goNext">Go to next post</button></section>
 <img id="card" alt="Kannada word card">
-<div class="row"><button id="mS" class="on">Story</button><button id="mF">Feed post</button></div>
+<div class="row"><button id="mS">Story</button><button id="mF">Feed post</button></div>
 <div class="row"><button id="share" class="pri">Share to Instagram</button></div>
-<p class="mu" id="msg">Tap, choose Instagram, then Story or Feed. For a feed post, tap Copy caption first.</p>
+<p class="mu" id="msg">Choose Story or Feed post, then share. For a feed post, copy the caption first.</p>
 <div class="row"><button id="prev">Previous</button><button id="mark">Mark posted</button><button id="next">Next</button></div>
 <pre id="cap"></pre>
-<div class="row"><button id="copy">Copy caption</button><button id="nxt">Next unposted</button></div>
-<p class="mu" id="stat"></p>
+<div class="row"><button id="copy">Copy caption</button></div>
+<p class="mu" id="stat"></p><p class="mu">Calendar: green means both formats posted; mint means one posted. Tap a day to view it.</p>
 <div id="grid"></div>
-</main>
-<script>
-var D=[["Common word", "ನಮಸ್ಕಾರ", "namaskaara", "Hello", "ನಮಸ್ಕಾರ, ನನ್ನ ಹೆಸರು ರಾಜ.", "Namaskaara, nanna hesaru raaja.", "Hello, my name is Raja."], ["Common word", "ಮ drink", "mady", "I am hungry", "ಮ drink", "mady", "I am hungry"], ["Common word", "ತಂದೆ", "tande", "Father", "ತಂದೆ ಮನೆಗೆ ಬಂದರು.", "Tande manege bandaru.", "Father came home."], ["Common word", "ಮೆಣಸಿನಕಾಯಿ", "meNasinakaayi", "Chilli", "ಮೆಣಸಿನಕಾಯಿ ಚೆನ್ನಾಗಿದೆಯೇ?", "MeNasinakaayi chennagideyae?", "Is the chilli good?"], ["Common word", "ಮನೆ", "mane", "House", "ನನ್ನ ಮನೆ ದೊಡ್ಡದಾಗಿದೆ.", "Nanna mane doddadagaide.", "My house is big."], ["Common word", "ಕಾಲು", "kaalu", "Leg", "ಕಾಲು ನೋವು ಮಾಡುತ್ತಿದೆ.", "Kaalu novu maDuttide.", "My leg hurts."], ["Common word", "ಕಥೆ", "kathe", "Story", "ಅವಳು ಒಂದು ಚೆನ್ನಾದ ಕಥೆ ಹೇಳಿದಳು.", "Avalu ondu chennada kathe heLidalu.", "She told a nice story."], ["Common word", "ಕಾಗದ", "kaagada", "Paper", "ಇದನ್ನು ಕಾಗದದ ಮೇಲೆ ಬರೆ.", "Idannu kaagadada mele bare.", "Write this on paper."], ["Common word", "ಸಮಯ", "samaya", "Time", "ಸಮಯ ವೃದ್ಧಿಯಾಗುತ್ತಿದೆ.", "Samaya vruddhiyaguttide.", "Time is passing."], ["Common word", "ಮೂತಿ", "mooti", "Shape", "ಆಕಾರ ಮತ್ತು ರೂಪದ ನಡುವೆ ವ್ಯತ್ಯಾಸವಿದೆ.", "Aakara mattu roopada madhyadinda vyathyaasavide.", "There is a difference between form and shape."], ["Common word", "ಹಬ್ಬ", "habba", "Festival", "ನಾವು ಹಬ್ಬದ ದಿನವನ್ನು ಉತ್ಸಾಹದಿಂದ ಆಚರಿಸುತ್ತೇವೆ.", "Naavu habbada dinavannu utsaahadinda aacharisutve.", "We celebrate the festival day with enthusiasm."], ["Common word", "ಸ್ನೇಹ", "sneha", "Love", "ಸ್ನೇಹವು ನಮ್ಮ ಜೀವನಕ್ಕೆ_colors_", "Sneha vu namma jeevanakke aashraya.", "Love is the support of our life."], ["Command", "ದಯವಿಟ್ಟು", "dayaviTTu", "Please", "ದಯವಿಟ್ಟು ಒಳಗೆ ಬನ್ನಿರಿ.", "DayaviTTu olage banniri.", "Please come inside."], ["Command", "ಮ请ಸಿಕೊಳ್ಳಿ", "sneha", "Please", "example", "example", "example"]];
-var F='"Noto Sans Kannada","Nirmala UI","Kohinoor Kannada","Tunga",system-ui,sans-serif';
-var COL=["#534AB7","#0F6E56","#993C1D"],CMD="#185FA5";
-var $=function(i){return document.getElementById(i)};
-var P={},cur=0,M="story",IMG={},FILES={};
-var START_DATE = new Date();
-START_DATE.setHours(0,0,0,0);
-START_DATE.setDate(START_DATE.getDate()-4);
-function formatISODate(date){
-  var y=date.getFullYear();
-  var m=String(date.getMonth()+1).padStart(2,'0');
-  var d=String(date.getDate()).padStart(2,'0');
-  return y+'-'+m+'-'+d;
-}
-function getDateForDay(dayIndex){
-  var d=new Date(START_DATE);
-  d.setDate(d.getDate()+dayIndex);
-  return formatISODate(d);
-}
-try{P=JSON.parse(localStorage.getItem("kn_ig")||"{}")}catch(e){}
+</main><script>
+// Load the original word list from its preserved repository version.
+var DATA_URL="https://raw.githubusercontent.com/SamratAS/Kannada/ed4cc35ce7a30ab775c1ac4c5e1a66b38b953129/index.html";
+var D=[];
+var $=function(id){return document.getElementById(id)};
+var P={},cur=0,M="story",FILES={};
+try{P=JSON.parse(localStorage.getItem("kn_ig")||"{}")}catch(e){P={}}
 function save(){try{localStorage.setItem("kn_ig",JSON.stringify(P))}catch(e){}}
-function today(){var n=new Date();return n.getFullYear()+"-"+("0"+(n.getMonth()+1)).slice(-2)+"-"+("0"+n.getDate()).slice(-2)}
-function nextUn(){for(var i=0;i<365;i++)if(!P["s"+i]||!P["f"+i])return i;return 364}
-cur=nextUn();
-function fit(c,t,max,size,min,w){while(size>min){c.font=w+" "+size+"px "+F;if(c.measureText(t).width<=max)break;size-=4}return size}
-function mk(i,h){
-  var d=D[i],cmd=d[0]==="Command",hs=!!d[4],f=h<1920;
-  var L=f?[100,330,430,495,600,665,790,850,950,1030,1130,400,1290]:[140,520,620,690,810,880,1030,1100,1220,1320,1440,500,1820];
-  var o=hs?0:(f?200:340),cv=document.createElement("canvas");cv.width=1080;cv.height=h;
-  var c=cv.getContext("2d");c.fillStyle=cmd?CMD:COL[i%3];c.fillRect(0,0,1080,h);
-  c.fillStyle="#fff";c.globalAlpha=.85;c.font="400 36px "+F;c.textAlign="left";
-  c.fillText(cmd?"Kannada command of the day":"Kannada word of the day",80,L[0]);
-  c.textAlign="right";c.fillText("Day "+(i+1)+" / 365",1000,L[0]);
-  c.textAlign="center";c.globalAlpha=1;
-  var s=fit(c,d[1],900,220,80,500);c.font="500 "+s+"px "+F;c.fillText(d[1],540,L[1]+o);
-  var r=fit(c,d[2],900,72,40,400);c.font="400 "+r+"px "+F;c.fillText(d[2],540,L[2]+o);
-  c.globalAlpha=.5;c.fillRect(480,L[3]+o,120,6);c.globalAlpha=1;
-  var e=fit(c,d[3],900,100,50,500);c.font="500 "+e+"px "+F;c.fillText(d[3],540,L[4]+o);
-  if(cmd){c.globalAlpha=.85;c.font="400 40px "+F;c.fillText("polite form",540,L[5]+o);c.globalAlpha=1}
-  if(hs){
-   c.globalAlpha=.16;c.fillRect(60,L[6],960,L[11]);c.globalAlpha=.85;c.font="400 34px "+F;c.fillText("Example sentence",540,L[7]);c.globalAlpha=1;
-   var a=fit(c,d[4],860,80,44,500);c.font="500 "+a+"px "+F;c.fillText(d[4],540,L[8]);
-   var b=fit(c,d[5],860,40,26,400);c.globalAlpha=.9;c.font="400 "+b+"px "+F;c.fillText(d[5],540,L[9]);
-   var g=fit(c,d[6],860,48,28,500);c.globalAlpha=1;c.font="500 "+g+"px "+F;c.fillText(d[6],540,L[10]);
-  }
-  c.globalAlpha=.85;c.font="400 36px "+F;c.textAlign="left";c.fillText(cmd?"Command":"Common word",80,L[12]);
-  c.textAlign="right";c.fillText("#LearnKannada",1000,L[12]);
-  return cv}
-function draw(i){
-  var d=D[i],cmd=d[0]==="Command",hs=!!d[4],S=mk(i,1920),Fd=mk(i,1350);
-  IMG={story:S.toDataURL("image/png"),feed:Fd.toDataURL("image/png")};FILES={};
-  S.toBlob(function(b){if(b)FILES.story=new File([b],"kannada-day-"+(i+1)+"-story.png","image/png");},"image/png");
-  Fd.toBlob(function(b){if(b)FILES.feed=new File([b],"kannada-day-"+(i+1)+"-post.png","image/png");},"image/png");
-  $("card").src=IMG[M];
-  $("cap").textContent="Kannada word of the day — Day "+(i+1)+"/365\n\n"+d[1]+"\n("+d[2]+")\n= "+d[3]+(cmd?"\n(polite form)":"")+(hs?"\n\nExample:\n"+d[4]+"\n("+d[5]+")\n= "+d[6]:"")+"\n\n#LearnKannada";
-}
-function show(){
-  draw(cur);
-  var K=M==="story"?"s":"f",ns=0,nf=0;
-  for(var i=0;i<365;i++){if(P["s"+i])ns++;if(P["f"+i])nf++}
-  $("mS").className=M==="story"?"on":"";$("mF").className=M==="feed"?"on":"";
-  var postDate=getDateForDay(cur);
-  $("info").textContent="Day "+(cur+1)+" of 365 · Story "+(P["s"+cur]?"posted":"not posted")+" · Feed "+(P["f"+cur]?"posted":"not posted");
-  $("dateInfo").textContent="Post date: "+postDate+" · Start date: "+formatISODate(START_DATE);
-  $("startDate").value=formatISODate(START_DATE);
-  $("mark").textContent=P[K+cur]?"Unmark":"Mark posted";
-  $("stat").textContent="Stories posted: "+ns+" of 365. Feed posts: "+nf+" of 365.";
-  var g=$("grid");g.innerHTML="";
-  for(var i=0;i<365;i++){var q=document.createElement("div"),n=(P["s"+i]?1:0)+(P["f"+i]?1:0);q.className="g"+(n===2?" p":(n===1?" h":""))+(i===cur?" c":"");q.textContent=i+1;(function(i){q.onclick=function(){cur=i;show();}})(i);g.appendChild(q)}
-}
-$("mS").onclick=function(){M="story";show()};
-$("mF").onclick=function(){M="feed";show()};
-$("prev").onclick=function(){cur=Math.max(0,cur-1);show()};
-$("next").onclick=function(){cur=Math.min(364,cur+1);show()};
-$("nxt").onclick=function(){cur=nextUn();show()};
-$("mark").onclick=function(){var k=(M==="story"?"s":"f")+cur;if(P[k])delete P[k];else P[k]=today();save();show()};
-var HELP="Sharing is blocked in this view. Press and hold the card, tap Share image, then choose Instagram. After posting, tap Mark posted.";
-$("share").onclick=function(){
-  var m=$("msg"),F2=FILES[M],k=(M==="story"?"s":"f")+cur;
-  if(!F2){m.textContent="Card is still loading. Tap again.";return}
-  var d={files:[F2]};
-  if(!navigator.share||(navigator.canShare&&!navigator.canShare(d))){m.textContent=HELP;return}
-  navigator.share(d).then(function(){P[k]=today();save();show();$("msg").textContent="Marked as posted. Check Instagram to be sure."}).catch(function(e){$("msg").textContent=(e&&e.name==="AbortErr"?"Sharing cancelled.":"Share failed. Try again.")});
-};
-$("copy").onclick=function(){var t=$("cap").textContent,b=this;
-  try{navigator.clipboard.writeText(t).then(function(){b.textContent="Copied"})}catch(e){b.textContent="Press and hold the text to copy"}};
-$("startDate").onchange=function(){
-  var v=this.value;
-  if(!v) return;
-  var d=new Date(v+'T00:00:00');
-  if(!isNaN(d.getTime())){START_DATE=d;show();}
-};
-show();
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function niceDate(value){return new Date(value+"T00:00:00").toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"})}
+var savedStart="";try{savedStart=localStorage.getItem("kn_start_date")||""}catch(e){}
+if(!savedStart){var initial=new Date();initial.setHours(0,0,0,0);initial.setDate(initial.getDate()-4);savedStart=iso(initial)}
+$("startDate").value=savedStart;
+function dayDate(i){var d=new Date($("startDate").value+"T00:00:00");d.setDate(d.getDate()+i);return iso(d)}
+function nextPost(){for(var i=0;i<365;i++){if(!P["s"+i])return {index:i,mode:"story"};if(!P["f"+i])return {index:i,mode:"feed"}}return {index:364,mode:"feed",done:true}}
+function fit(c,t,max,size,min,weight,font){while(size>min){c.font=weight+" "+size+"px "+font;if(c.measureText(t).width<=max)break;size-=4}return size}
+var KAN='"Noto Sans Kannada","Nirmala UI","Kohinoor Kannada","Tunga",system-ui,sans-serif';
+function makeCard(i,height){var d=D[i],canvas=document.createElement("canvas");canvas.width=1080;canvas.height=height;var c=canvas.getContext("2d"),feed=height===1350,command=d[0]==="Command",date=niceDate(dayDate(i));c.fillStyle=command?"#185FA5":["#534AB7","#0F6E56","#993C1D"][i%3];c.fillRect(0,0,1080,height);c.fillStyle="#fff";c.textAlign="left";c.globalAlpha=.85;c.font="400 36px "+KAN;c.fillText(command?"Kannada command of the day":"Kannada word of the day",80,feed?100:140);c.textAlign="right";c.fillText("Day "+(i+1)+" / 365",1000,feed?100:140);c.textAlign="center";c.globalAlpha=1;c.font="400 34px system-ui";c.fillText(date,540,feed?175:235);var offset=feed?0:100,s=fit(c,d[1],900,200,72,500,KAN);c.font="500 "+s+"px "+KAN;c.fillText(d[1],540,(feed?390:600)+offset);var r=fit(c,d[2],900,70,38,400,KAN);c.font="400 "+r+"px "+KAN;c.fillText(d[2],540,(feed?490:720)+offset);c.globalAlpha=.5;c.fillRect(480,(feed?545:785)+offset,120,6);c.globalAlpha=1;var e=fit(c,d[3],900,90,44,500,"system-ui");c.font="500 "+e+"px system-ui";c.fillText(d[3],540,(feed?665:940)+offset);if(d[4]){c.font="400 30px "+KAN;c.fillText(d[4],540,(feed?850:1240)+offset)}c.globalAlpha=.85;c.font="400 34px system-ui";c.textAlign="left";c.fillText(command?"Command":"Common word",80,height-70);c.textAlign="right";c.fillText("#LearnKannada",1000,height-70);return canvas}
+function draw(){if(!D[cur])return;var d=D[cur],story=makeCard(cur,1920),feed=makeCard(cur,1350),selected=M==="story"?story:feed;$("card").src=selected.toDataURL("image/png");FILES={};story.toBlob(function(b){if(b)FILES.story=new File([b],"kannada-day-"+(cur+1)+"-story.png",{type:"image/png"})},"image/png");feed.toBlob(function(b){if(b)FILES.feed=new File([b],"kannada-day-"+(cur+1)+"-post.png",{type:"image/png"})},"image/png");var command=d[0]==="Command",hasExample=!!d[4];$("cap").textContent="Kannada word of the day — Day "+(cur+1)+"/365 · "+niceDate(dayDate(cur))+"\n\n"+d[1]+"\n("+d[2]+")\n= "+d[3]+(hasExample?"\n\nExample:\n"+d[4]+"\n("+d[5]+")\n= "+d[6]:"")+"\n\n#LearnKannada #Kannada"}
+function show(){if(!D.length)return;draw();var ns=0,nf=0;for(var i=0;i<365;i++){if(P["s"+i])ns++;if(P["f"+i])nf++}$("mS").className=M==="story"?"on":"";$("mF").className=M==="feed"?"on":"";$("info").textContent="Day "+(cur+1)+" of 365 · Story "+(P["s"+cur]?"posted":"not posted")+" · Feed "+(P["f"+cur]?"posted":"not posted");$("dateInfo").textContent="Post date: "+niceDate(dayDate(cur))+" · Start date: "+niceDate($("startDate").value);$("mark").textContent=P[(M==="story"?"s":"f")+cur]?"Unmark posted":"Mark posted";$("stat").textContent="Stories posted: "+ns+" of 365 · Feed posts: "+nf+" of 365";var n=nextPost();$("nextTitle").textContent=n.done?"All posts are marked posted":"Next post: Day "+(n.index+1)+" · "+(n.mode==="story"?"Story":"Feed post");$("nextDetail").textContent=n.done?"You have completed the 365-day schedule.":niceDate(dayDate(n.index))+" · "+(P["s"+n.index]?"Story posted":"Story not posted")+" · "+(P["f"+n.index]?"Feed posted":"Feed not posted");var grid=$("grid");grid.innerHTML="";for(var j=0;j<365;j++){var q=document.createElement("button"),count=(P["s"+j]?1:0)+(P["f"+j]?1:0);q.type="button";q.className="g"+(count===2?" p":count===1?" h":"")+(j===cur?" c":"");q.textContent=j+1;q.title="Day "+(j+1)+" · "+niceDate(dayDate(j))+" · "+(count===2?"both posted":count===1?"one posted":"not posted");q.onclick=(function(index){return function(){cur=index;show()}})(j);grid.appendChild(q)}}
+$("startDate").onchange=function(){if(!this.value)return;try{localStorage.setItem("kn_start_date",this.value)}catch(e){}show()};
+$("mS").onclick=function(){M="story";try{localStorage.setItem("kn_mode",M)}catch(e){}show()};$("mF").onclick=function(){M="feed";try{localStorage.setItem("kn_mode",M)}catch(e){}show()};
+$("prev").onclick=function(){cur=Math.max(0,cur-1);show()};$("next").onclick=function(){cur=Math.min(D.length-1,cur+1);show()};$("goNext").onclick=function(){var n=nextPost();cur=n.index;M=n.mode;show();window.scrollTo(0,0)};
+$("mark").onclick=function(){var key=(M==="story"?"s":"f")+cur;if(P[key])delete P[key];else P[key]=new Date().toISOString();save();var n=nextPost();if(!P[key]||n.index!==cur||n.mode!==M){cur=n.index;M=n.mode}show()};
+$("copy").onclick=function(){var b=this; if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText($("cap").textContent).then(function(){b.textContent="Copied"}).catch(function(){b.textContent="Press and hold the caption to copy"});else b.textContent="Press and hold the caption to copy"};
+$("share").onclick=function(){var file=FILES[M],key=(M==="story"?"s":"f")+cur;if(!file){$("msg").textContent="Card is still loading. Tap again.";return}var data={files:[file]};if(!navigator.share||(navigator.canShare&&!navigator.canShare(data))){$("msg").textContent="Sharing is not available here. Press and hold the card, choose Share image, then choose Instagram. After posting, tap Mark posted.";return}navigator.share(data).then(function(){P[key]=new Date().toISOString();save();var n=nextPost();cur=n.index;M=n.mode;show();$("msg").textContent="Marked as posted. Check Instagram to be sure."}).catch(function(e){$("msg").textContent=e&&e.name==="AbortError"?"Sharing cancelled; this post was not marked.":"Share failed. Try again."})};
+function loadWords(){return fetch(DATA_URL).then(function(r){if(!r.ok)throw Error("Could not load word list");return r.text()}).then(function(html){var match=html.match(/var D=(\[[\s\S]*?\]);\s*\nvar F=/);if(!match)throw Error("Could not read the word list");D=JSON.parse(match[1]);if(D.length<365)throw Error("Word list is incomplete")})}
+loadWords().then(function(){try{M=localStorage.getItem("kn_mode")||"story"}catch(e){}var n=nextPost();cur=n.index;M=n.mode;show()}).catch(function(){ $("info").textContent="Could not load the 365-day word list. Check your internet connection and reload.";$("msg").textContent="The original word list is being loaded from the repository. Reload when connected."});
 </script></body></html>
